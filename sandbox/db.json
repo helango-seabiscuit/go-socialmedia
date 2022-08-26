@@ -1,0 +1,1 @@
+{"users":{"test@example.com":{"createdAt":"2022-08-24T05:44:24.303728Z","email":"test@example.com","password":"password","name":"john doe","age":"18"}},"posts":{"e7e2fee6-9fdb-4ddb-a67f-4bc110fd7cfd":{"id":"e7e2fee6-9fdb-4ddb-a67f-4bc110fd7cfd","createdAt":"2022-08-24T05:44:24.304664Z","userEmail":"test@example.com","text":"my cat is getting skinny now"}}}
