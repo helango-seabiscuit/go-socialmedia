@@ -1,0 +1,31 @@
+GET http://localhost:8001/users/ax@gmail.com  HTTP/1.1
+
+###
+GET http://localhost:8080/ HTTP/1.1
+
+###
+GET http://localhost:8080/err
+
+###
+GET http://localhost:8080/users/ax@gmail.com
+
+### 
+GET http://localhost:8080/posts/ax@gmail.com
+
+###
+GET http://localhost:8080/users/t@ex.com
+
+
+###
+DELETE http://localhost:8080/users/t@ex.com
+
+###
+POST  http://localhost:8080/users 
+Content-Type: application/json
+
+{
+    "email":"t@ex.com",
+    "name":"t",
+    "password":"p",
+    "age":"22"
+}

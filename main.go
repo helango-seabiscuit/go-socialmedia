@@ -2,25 +2,23 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
-	"log"
 	"net/http"
-	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/helango-seabiscuit/go-socialmedia/internal/database"
 )
 
-func testHandler(w http.ResponseWriter, r *http.Request) {
-	respondWithJSON(w, 200, database.User{
+func testHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, database.User{
 		Email: "test@example.com",
 		Name:  "test",
 		Age:   "16",
 	})
 }
 
-func testErrHandler(w http.ResponseWriter, r *http.Request) {
-	respondWithError(w, 200, errors.New("testing error"))
+func testErrHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"err": "testing error"})
+
 }
 
 func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
@@ -50,23 +48,20 @@ func main() {
 	config := apiConfig{
 		dbClient: dbClient,
 	}
-	m := http.NewServeMux()
-	m.HandleFunc("/", testHandler)
-	m.HandleFunc("/err", testErrHandler)
-	m.HandleFunc("/users", config.endpointUsersHandler)
-	m.HandleFunc("/users/", config.endpointUsersHandler)
-	m.HandleFunc("/posts", config.endpointPostsHandler)
-	m.HandleFunc("/posts/", config.endpointPostsHandler)
-	const addr = "localhost:8001"
-	srv := http.Server{
-		Handler:      m,
-		Addr:         addr,
-		WriteTimeout: 30 * time.Second,
-		ReadTimeout:  30 * time.Second,
-	}
 
-	fmt.Println("server started pn ", addr)
-	err := srv.ListenAndServe()
-	log.Fatal(err)
+	route := gin.Default()
+	route.GET("/", testHandler)
+	route.GET("/err", testErrHandler)
+	route.POST("/users", config.HandleCreateUser)
+	route.GET("/users/:email", config.HandleGetUser)
+	route.DELETE("/users/:email", config.HandleDeleteUser)
+	route.GET("/posts/:email", config.HandleRetrievePosts)
+	route.POST("/posts", config.HandleCreatePost)
+	route.DELETE("/posts/:id", config.handleDeletePost)
+
+	// m.HandleFunc("/posts", config.endpointPostsHandler)
+	// m.HandleFunc("/posts/", config.endpointPostsHandler)
+
+	route.Run()
 
 }

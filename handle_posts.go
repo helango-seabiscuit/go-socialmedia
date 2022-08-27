@@ -1,11 +1,10 @@
 package main
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
-	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 type parameter struct {
@@ -13,47 +12,37 @@ type parameter struct {
 	Text      string `json:"text"`
 }
 
-func (a apiConfig) endpointPostsHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodGet:
-		a.HandleRetrievePosts(w, r)
-	case http.MethodPost:
-		decoder := json.NewDecoder(r.Body)
-		post := parameter{}
-		err := decoder.Decode(&post)
-		if err != nil {
-			respondWithError(w, http.StatusBadRequest, err)
-		}
-		pst, err := a.dbClient.CreatePost(post.UserEmail, post.Text)
-		if err != nil {
-			respondWithError(w, http.StatusBadRequest, err)
-		}
-		fmt.Println("post created ", pst)
-		respondWithJSON(w, http.StatusCreated, pst)
-	case http.MethodPut:
-	case http.MethodDelete:
-		a.handleDeletePost(w, r)
-	default:
-		respondWithError(w, 404, errors.New("method not supported"))
+func (a apiConfig) HandleCreatePost(c *gin.Context) {
+	post := parameter{}
+	if err := c.ShouldBindJSON(&post); err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
 	}
+	pst, err := a.dbClient.CreatePost(post.UserEmail, post.Text)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	fmt.Println("post created ", pst)
+	c.JSON(http.StatusCreated, pst)
 }
 
-func (a apiConfig) HandleRetrievePosts(w http.ResponseWriter, r *http.Request) {
-	email := strings.TrimPrefix(r.URL.Path, "/posts/")
+func (a apiConfig) HandleRetrievePosts(c *gin.Context) {
+	email := c.Param("email")
 	posts, err := a.dbClient.GetPosts(email)
 	if err != nil {
-		respondWithError(w, http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, err)
 	}
 
-	respondWithJSON(w, http.StatusOK, posts)
+	c.JSON(http.StatusOK, posts)
 }
 
-func (a apiConfig) handleDeletePost(w http.ResponseWriter, r *http.Request) {
-	pid := r.URL.Path
-	pid = strings.TrimPrefix(pid, "/posts/")
+func (a apiConfig) handleDeletePost(c *gin.Context) {
+	pid := c.Param("id")
 	err := a.dbClient.DeletePost(pid)
 	if err != nil {
-		respondWithError(w, http.StatusBadRequest, err)
+		c.JSON(http.StatusBadRequest, err)
+		return
 	}
-	respondWithJSON(w, http.StatusOK, struct{}{})
+	c.JSON(http.StatusOK, struct{}{})
 }

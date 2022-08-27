@@ -4,13 +4,21 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/helango-seabiscuit/http_server_golang/internal/database"
+	"github.com/helango-seabiscuit/go-socialmedia/internal/database"
+	passwordvalidator "github.com/wagslane/go-password-validator"
 )
 
 func main() {
+
+	entropy := passwordvalidator.GetEntropy("Anjaneya04@_")
+	fmt.Println("Entropy ", entropy)
+	const minEntropyBits = 68
+	err := passwordvalidator.Validate("Anjaneya04@_", minEntropyBits)
+	fmt.Println(err)
+
 	c := database.NewClient("db.json")
 
-	err := c.EnsureDB()
+	err = c.EnsureDB()
 	if err != nil {
 		log.Fatal(err)
 	}
