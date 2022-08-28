@@ -52,6 +52,7 @@ func main() {
 	route := gin.Default()
 	route.GET("/", testHandler)
 	route.GET("/err", testErrHandler)
+	route.POST("/login", config.HandleLogin)
 	route.POST("/users", config.HandleCreateUser)
 	route.GET("/users/:email", config.HandleGetUser)
 	route.DELETE("/users/:email", config.HandleDeleteUser)

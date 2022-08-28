@@ -24,8 +24,17 @@ POST  http://localhost:8080/users
 Content-Type: application/json
 
 {
-    "email":"t@ex.com",
-    "name":"t",
-    "password":"p",
-    "age":"22"
+    "email":"weak@ex.com",
+    "name":"weak",
+    "password":"pww",
+    "age":"19"
+}
+
+### 
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+    "email":"ax@gmail.com",
+    "password":"pd"
 }
