@@ -5,5 +5,6 @@ import (
 )
 
 type apiConfig struct {
-	dbClient database.Client
+	dbClient    database.Client
+	dbSqlClient *database.DBClient
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -43,10 +44,16 @@ type errorBody struct {
 }
 
 func main() {
-	dbClient := database.NewClient("db.json")
-	dbClient.EnsureDB()
+	jsonClient := database.NewClient("db.json")
+	jsonClient.EnsureDB()
+
+	dbClient, err := database.NewSQLite3Repo("media.db")
+	if err != nil {
+		log.Fatal(err)
+	}
 	config := apiConfig{
-		dbClient: dbClient,
+		dbClient:    jsonClient,
+		dbSqlClient: dbClient,
 	}
 
 	route := gin.Default()

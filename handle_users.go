@@ -1,12 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/helango-seabiscuit/go-socialmedia/internal/database"
 	passwordvalidator "github.com/wagslane/go-password-validator"
 )
 
@@ -53,7 +52,13 @@ func (a apiConfig) HandleCreateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
-	usr, err := a.dbClient.CreateUser(user.Email, user.Password, user.Name, user.Age)
+	u := database.User{
+		Name:     user.Name,
+		Email:    user.Email,
+		Age:      user.Age,
+		Password: user.Password,
+	}
+	usr, err := a.dbSqlClient.CreateUser(u)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -62,26 +67,9 @@ func (a apiConfig) HandleCreateUser(c *gin.Context) {
 	c.JSON(http.StatusOK, usr)
 }
 
-func (a apiConfig) HandleUpdateUser(w http.ResponseWriter, r *http.Request) {
-	email := strings.TrimPrefix(r.URL.Path, "/users/")
-
-	decoder := json.NewDecoder(r.Body)
-	user := parameters{}
-	err := decoder.Decode(&user)
-	if err != nil {
-		respondWithError(w, http.StatusBadRequest, err)
-	}
-	usr, err := a.dbClient.UpdateUser(email, user.Password, user.Name, user.Age)
-	if err != nil {
-		respondWithError(w, http.StatusBadRequest, err)
-	}
-	fmt.Println("user updated ", usr)
-	respondWithJSON(w, http.StatusOK, usr)
-}
-
 func (a apiConfig) HandleGetUser(c *gin.Context) {
 	email := c.Param("email")
-	user, err := a.dbClient.GetUser(email)
+	user, err := a.dbSqlClient.RetrieveUser(email)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return

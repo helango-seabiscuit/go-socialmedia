@@ -13,7 +13,7 @@ GET http://localhost:8080/users/ax@gmail.com
 GET http://localhost:8080/posts/ax@gmail.com
 
 ###
-GET http://localhost:8080/users/t@ex.com
+GET http://localhost:8080/users/weak@ex.com
 
 
 ###
@@ -26,7 +26,7 @@ Content-Type: application/json
 {
     "email":"weak@ex.com",
     "name":"weak",
-    "password":"pww",
+    "password":"pww12&_Tr99!",
     "age":"19"
 }
 
