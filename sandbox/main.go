@@ -10,10 +10,10 @@ import (
 
 func main() {
 
-	entropy := passwordvalidator.GetEntropy("Anjaneya04@_")
+	entropy := passwordvalidator.GetEntropy("dfdfdffd")
 	fmt.Println("Entropy ", entropy)
 	const minEntropyBits = 68
-	err := passwordvalidator.Validate("Anjaneya04@_", minEntropyBits)
+	err := passwordvalidator.Validate("sdsdfdf", minEntropyBits)
 	fmt.Println(err)
 
 	c := database.NewClient("db.json")
