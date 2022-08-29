@@ -32,7 +32,7 @@ func (a apiConfig) HandleLogin(c *gin.Context) {
 		return
 	}
 
-	user, err := a.dbClient.GetUser(login.Email)
+	user, err := a.dbSqlClient.RetrieveUser(login.Email)
 	if err != nil || user.Password != login.Password {
 		c.JSON(http.StatusUnauthorized, err)
 		return
@@ -79,7 +79,7 @@ func (a apiConfig) HandleGetUser(c *gin.Context) {
 
 func (a apiConfig) HandleDeleteUser(c *gin.Context) {
 	email := c.Param("email")
-	err := a.dbClient.DeleteUser(email)
+	err := a.dbSqlClient.DeleteUser(email)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return

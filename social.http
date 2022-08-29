@@ -9,9 +9,6 @@ GET http://localhost:8080/err
 ###
 GET http://localhost:8080/users/ax@gmail.com
 
-### 
-GET http://localhost:8080/posts/ax@gmail.com
-
 ###
 GET http://localhost:8080/users/weak@ex.com
 
@@ -30,11 +27,45 @@ Content-Type: application/json
     "age":"19"
 }
 
+###
+POST  http://localhost:8080/users 
+Content-Type: application/json
+
+{
+    "email":"delete@ex.com",
+    "name":"delete",
+    "password":"delete67_Tr99!",
+    "age":"29"
+}
+
+###
+GET http://localhost:8080/users/delete@ex.com
+
+
+###
+DELETE http://localhost:8080/users/delete@ex.com
+
+
+###
+POST http://localhost:8080/posts
+Content-Type: application/json
+
+{
+    "userEmail":"weak@ex.com",
+    "text":"first sqlite post"
+}
+
+###
+GET http://localhost:8080/posts/weak@ex.com
+
+
+###
+DELETE http://localhost:8080/posts/5046f006-cf92-4ae9-8d9f-46675ab698b1
 ### 
 POST http://localhost:8080/login
 Content-Type: application/json
 
 {
-    "email":"ax@gmail.com",
-    "password":"pd"
+    "email":"weak@ex.com",
+    "password":"pww12&_Tr99!"
 }

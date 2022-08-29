@@ -3,8 +3,11 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"github.com/helango-seabiscuit/go-socialmedia/internal/database"
 )
 
 type parameter struct {
@@ -18,7 +21,13 @@ func (a apiConfig) HandleCreatePost(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	pst, err := a.dbClient.CreatePost(post.UserEmail, post.Text)
+	pst := database.Post{
+		ID:        uuid.NewString(),
+		UserEmail: post.UserEmail,
+		Text:      post.Text,
+		CreatedAt: time.Now(),
+	}
+	pst, err := a.dbSqlClient.CreatePost(pst)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
@@ -29,7 +38,7 @@ func (a apiConfig) HandleCreatePost(c *gin.Context) {
 
 func (a apiConfig) HandleRetrievePosts(c *gin.Context) {
 	email := c.Param("email")
-	posts, err := a.dbClient.GetPosts(email)
+	posts, err := a.dbSqlClient.RetrievePosts(email)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 	}
@@ -39,7 +48,7 @@ func (a apiConfig) HandleRetrievePosts(c *gin.Context) {
 
 func (a apiConfig) handleDeletePost(c *gin.Context) {
 	pid := c.Param("id")
-	err := a.dbClient.DeletePost(pid)
+	err := a.dbSqlClient.DeletePost(pid)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
