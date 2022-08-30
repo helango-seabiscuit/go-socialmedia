@@ -37,7 +37,7 @@ func (a apiConfig) HandleLogin(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, err)
 		return
 	}
-	c.JSON(http.StatusOK, "login successful")
+	c.JSON(http.StatusOK, "login successful ")
 }
 
 func (a apiConfig) HandleCreateUser(c *gin.Context) {

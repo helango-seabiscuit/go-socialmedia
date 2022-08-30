@@ -17,6 +17,10 @@ func testHandler(c *gin.Context) {
 	})
 }
 
+func ping(c *gin.Context) {
+	c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
+}
+
 func testErrHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"err": "testing error"})
 
@@ -57,6 +61,7 @@ func main() {
 	}
 
 	route := gin.Default()
+	route.GET("/ping", ping)
 	route.GET("/", testHandler)
 	route.GET("/err", testErrHandler)
 	route.POST("/login", config.HandleLogin)
@@ -69,7 +74,7 @@ func main() {
 
 	// m.HandleFunc("/posts", config.endpointPostsHandler)
 	// m.HandleFunc("/posts/", config.endpointPostsHandler)
-
+	// PORT env for specific port to listen to
 	route.Run()
 
 }

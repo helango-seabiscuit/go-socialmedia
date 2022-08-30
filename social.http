@@ -69,3 +69,5 @@ Content-Type: application/json
     "email":"weak@ex.com",
     "password":"pww12&_Tr99!"
 }
+
+### Dockerize https://docs.docker.com/language/golang/build-images/
